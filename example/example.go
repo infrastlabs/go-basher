@@ -8,7 +8,7 @@ import (
 	"strings"
 
 	"github.com/dustin/go-jsonpointer"
-	"github.com/progrium/go-basher"
+	"gitee.com/huapox/go-basher"
 )
 
 func assert(err error) {
