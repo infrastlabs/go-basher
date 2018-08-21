@@ -129,11 +129,30 @@ func NewContext(bashpath string, debug bool) (*Context, error) {
 	}, nil
 }
 
+func exEnviron(arr []string) []string {
+	for i := 0; i < len(arr); i++ {
+		//println(arr[i])
+		trimVal := strings.TrimSpace(arr[i])
+		char1 := trimVal[0:1]
+		if "=" == char1 {
+			arr = append(arr[:i], arr[i+1:]...)
+			exEnviron(arr) //repeat until none.
+			break
+		}
+	}
+	return arr
+}
+
 // Copies the current environment variables into the Context
 func (c *Context) CopyEnv() {
 	c.Lock()
 	defer c.Unlock()
-	c.vars = append(c.vars, os.Environ()...)
+
+	arr := os.Environ()
+	arrEx := exEnviron(arr)
+	//println(len(arr))
+	//println(len(arrEx))
+	c.vars = append(c.vars, arrEx...)
 }
 
 // Adds a shell script to the Context environment. The loader argument can be nil
